@@ -16,7 +16,6 @@ class PlayView extends SubView {
     private static final String PROMPT = "Mueven las " + PlayView.COLOR_PARAM + ": ";
     private static final String CANCEL_FORMAT = "-1";
     private static final String MOVEMENT_FORMAT = "[1-8]{2}(\\.[1-8]{2}){1,2}";
-    private static final String ERROR_MESSAGE = "Error!!! Formato incorrecto";
     private static final String LOST_MESSAGE = "Derrota!!! No puedes mover tus fichas!!!";
     private String string;
 
@@ -34,12 +33,16 @@ class PlayView extends SubView {
                 playController.cancel();
             else if (!this.isMoveFormat()) {
                 error = Error.BAD_FORMAT;
-                this.writeError();
+                new ErrorView(error).writeln();
             } else {
                 error = playController.move(this.getCoordinates());
-                new GameView().write(playController);
-                if (error == null && playController.isBlocked())
-                    this.writeLost();
+                if (error != null){
+                	new ErrorView(error).writeln();
+                }else {
+	                new GameView().write(playController);
+	                if (playController.isBlocked())
+	                    this.writeLost();
+                }
             }
         } while (error != null);
     }
@@ -55,10 +58,6 @@ class PlayView extends SubView {
 
     private boolean isMoveFormat() {
         return Pattern.compile(PlayView.MOVEMENT_FORMAT).matcher(string).find();
-    }
-
-    private void writeError(){
-        this.console.writeln(PlayView.ERROR_MESSAGE);
     }
 
     private Coordinate[] getCoordinates() {
