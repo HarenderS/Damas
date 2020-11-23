@@ -24,11 +24,8 @@ public class GameTest {
 				"        ",
 				"        ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(5, 5);
-		coordinates[1] = to(6, 6);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(5, 5), to(6, 6));
 		assertEquals(Error.EMPTY_ORIGIN, error);
 	}
 	
@@ -43,11 +40,8 @@ public class GameTest {
 				" n      ",
 				"        ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(5, 1);
-		coordinates[1] = to(4, 2);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(5, 1),to(4,2));
 		assertEquals(Error.OPPOSITE_PIECE, error);
 	}
 	
@@ -62,11 +56,8 @@ public class GameTest {
 				" n      ",
 				"  b     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(5, 1);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(6, 2), to(5, 1));
 		assertEquals(Error.NOT_EMPTY_TARGET, error);
 	}
 	
@@ -81,11 +72,8 @@ public class GameTest {
 				" n      ",
 				"  b     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(4, 4);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(6, 2), to(4, 4));
 		assertEquals(Error.WITHOUT_EATING, error);
 	}
 	
@@ -100,11 +88,8 @@ public class GameTest {
 				"   n    ",
 				"  b     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(3, 5);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(6, 2), from(3, 5));
 		assertEquals(Error.TOO_MUCH_ADVANCED, error);
 	}
 	
@@ -119,11 +104,8 @@ public class GameTest {
 				"   n    ",
 				"  B     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(3, 5);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(6, 2), to(3, 5));
 		assertEquals(Error.TOO_MUCH_EATINGS, error);
 	}
 	
@@ -138,12 +120,25 @@ public class GameTest {
 				"   b    ",
 				"  b     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(4, 4);
 		
-		Error error = this.game.move(coordinates);
+		Error error = this.game.move(from(6, 2), to(4, 4));
 		assertEquals(Error.COLLEAGUE_EATING, error);
+	}
+	
+	@Test
+	public void moveAndGetTMJErrorTest() {
+		this.game = new GameBuilder().createBoard(
+				"        ",
+				"        ",
+				"        ",
+				"        ",
+				"        ",
+				"        ",
+				"  B     ",
+				"        ").build();
+		
+		Error error = this.game.move(from(6, 2), to(5, 3), to(4, 4));
+		assertEquals(Error.TOO_MUCH_JUMPS, error);
 	}
 
 	@Test
@@ -157,11 +152,8 @@ public class GameTest {
 				"        ",
 				"  b     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(5, 3);
 		
-		assertNull(this.game.move(coordinates));
+		assertNull(this.game.move(from(6, 2), to(5, 3)));
 	}
 	
 	@Test
@@ -175,12 +167,9 @@ public class GameTest {
 				"   n    ",
 				"  b     ",
 				"        ").build();
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(6, 2);
-		coordinates[1] = to(4, 4);
 		
 		assertNotNull(this.game.getPiece(from(5, 3)));
-		this.game.move(coordinates);
+		this.game.move(from(6, 2), to(4, 4));
 		assertNull(this.game.getPiece(from(5, 3)));
 	}
 	
@@ -196,11 +185,7 @@ public class GameTest {
 				"        ",
 				" b      ").build();
 		
-		Coordinate[] coordinates = new Coordinate[2];
-		coordinates[0] = from(7, 1);
-		coordinates[1] = to(8, 0);
-		
-		this.game.move(coordinates);
+		this.game.move(from(7, 1), to(8, 0));
 	}
 	
 	@Test

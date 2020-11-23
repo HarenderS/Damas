@@ -112,13 +112,47 @@ public class BoardTest {
 	}
 	
 	@Test
+	public void moveExistingPieceTest() {
+		board.put(to(1, 4), new Pawn(Color.WHITE));
+		assertNull(board.getPiece(from(1, 5)));
+		board.move(from(1, 4), to(1, 5));
+		assertNotNull(board.getPiece(from(1, 5)));
+	}
+	
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void moveExistingPieceOutOfLimitUpTest() {
+		board.put(to(0, 4), new Pawn(Color.WHITE));
+		board.move(from(0, 4), to(-1, 5));
+	}
+	
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void moveExistingPieceOutOfLimitDownTest() {
+		board.put(to(7, 4), new Pawn(Color.WHITE));
+		board.move(from(7, 4), to(8, 5));
+	}
+	
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void moveExistingPieceOutOfLimitLeftTest() {
+		board.put(to(1, 0), new Pawn(Color.WHITE));
+		board.move(from(1, 0), to(1, -1));
+	}
+	
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	public void moveExistingPieceOutOfLimitULTest() {
+		board.put(to(1, 7), new Pawn(Color.WHITE));
+		board.move(from(1, 7), to(1, 8));
+	}
+	
+	@Test
 	public void getCorrectColor() {
-		assertEquals(Color.BLACK, board.getColor(from(5, 2)));
+		board.put(to(3, 6), new Pawn(Color.BLACK));
+		assertEquals(Color.BLACK, board.getColor(from(3, 6)));
     }
 	
 	@Test
 	public void getIncorrectColor() {
-		assertNotEquals(Color.WHITE, board.getColor(from(5, 2)));
+		board.put(to(3, 6), new Pawn(Color.BLACK));
+		assertNotEquals(Color.WHITE, board.getColor(from(3, 6)));
     }
 
 	@Test

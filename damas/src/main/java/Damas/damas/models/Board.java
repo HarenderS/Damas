@@ -25,14 +25,14 @@ class Board {
     }
 
     Piece remove(Coordinate coordinate) {
-        assert this.getPiece(coordinate) != null;
+        assert !isNullPiece(this.getPiece(coordinate));
         Piece piece = this.getPiece(coordinate);
         this.put(coordinate, null);
         return piece;
     }
 
     void move(Coordinate origin, Coordinate target) {
-        assert this.getPiece(origin) != null;
+        assert !isNullPiece(this.getPiece(origin));
         this.put(target, this.remove(origin));
     }
 
@@ -41,7 +41,7 @@ class Board {
         if (origin.isOnDiagonal(target))
             for (Coordinate coordinate : origin.getBetweenDiagonalCoordinates(target)) {
                 Piece piece = this.getPiece(coordinate);
-                if (piece != null)
+                if (!isNullPiece(piece))
                     betweenDiagonalPieces.add(piece);
             }
         return betweenDiagonalPieces;
@@ -52,20 +52,19 @@ class Board {
             return 0;
         int betweenDiagonalPieces = 0;
         for (Coordinate coordinate : origin.getBetweenDiagonalCoordinates(target))
-            if (this.getPiece(coordinate) != null)
+            if (!isNullPiece(this.getPiece(coordinate)))
                 betweenDiagonalPieces++;
         return betweenDiagonalPieces;
     }
 
     Color getColor(Coordinate coordinate) {
-        final Piece piece = this.getPiece(coordinate);
-        if (piece == null)
+        if (isNullPiece(this.getPiece(coordinate)))
             return null;
-        return piece.getColor();
+        return this.getPiece(coordinate).getColor();
     }
 
     boolean isEmpty(Coordinate coordinate) {
-        return this.getPiece(coordinate) == null;
+        return isNullPiece(this.getPiece(coordinate));
     }
 
     @Override
@@ -89,13 +88,17 @@ class Board {
         String string = " " + row;
         for (int j = 0; j < Coordinate.getDimension(); j++) {
             Piece piece = this.getPiece(new Coordinate(row, j));
-            if (piece == null)
+            if (isNullPiece(piece))
                 string += " ";
             else {
                 string += piece;
             }
         }
         return string + row + "\n";
+    }
+    
+    private boolean isNullPiece(Piece piece) {
+    	return piece == null;
     }
 
     @Override

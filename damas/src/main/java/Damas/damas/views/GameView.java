@@ -8,11 +8,10 @@ class GameView extends SubView {
 
     void write(InteractorController controller) {
         assert controller != null;
-        final int DIMENSION = controller.getDimension();
-        this.writeNumbersLine(DIMENSION);
-        for (int i = 0; i < DIMENSION; i++)
+        this.writeNumbersLine(controller.getDimension());
+        for (int i = 0; i < controller.getDimension(); i++)
             this.writePiecesRow(i, controller);
-        this.writeNumbersLine(DIMENSION);
+        this.writeNumbersLine(controller.getDimension());
     }
 
     private void writeNumbersLine(final int DIMENSION) {

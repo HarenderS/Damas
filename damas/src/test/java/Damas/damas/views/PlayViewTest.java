@@ -15,7 +15,6 @@ import Damas.damas.controllers.PlayController;
 import Damas.damas.models.Coordinate;
 import Damas.damas.models.Game;
 import Damas.damas.models.GameBuilder;
-import Damas.damas.models.Piece;
 import Damas.damas.models.State;
 import Damas.damas.models.StateValue;
 import Damas.damas.utils.Console;
