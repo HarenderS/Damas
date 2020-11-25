@@ -35,10 +35,12 @@ public class Game {
 		int pair = 0;
 		do {
 			error = this.isCorrectPairMove(pair, coordinates);
-			removedCoordinates.add(this.getBetweenDiagonalPiece(pair, coordinates));
-			if ((error == null) && ((error = this.isCorrectGlobalMove(removedCoordinates, coordinates)) == null)) {
-				this.pairMove(pair, coordinates);
-				pair++;
+			if (error.isNull()) {
+				removedCoordinates.add(this.getBetweenDiagonalPiece(pair, coordinates));
+				if ((error = this.isCorrectGlobalMove(removedCoordinates, coordinates)).isNull()) {
+					this.pairMove(pair, coordinates);
+					pair++;
+				}
 			}
 		} while (pair < coordinates.length - 1 && error == null);
 		if (error == null)
