@@ -8,9 +8,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.lang.reflect.Field;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.internal.util.reflection.FieldSetter;
 import org.mockito.internal.util.reflection.Whitebox;
 
@@ -24,7 +28,10 @@ import Damas.damas.utils.Console;
 
 public class PlayViewTest {
 
+	@Mock
 	private PlayView playView;
+	
+	@InjectMocks
 	private PlayController controller;
 	private State state; 
 	private Game game;
@@ -35,9 +42,14 @@ public class PlayViewTest {
 		this.playView = mock(PlayView.class);
 		this.playView.console = mock(Console.class);
 		this.state = new State();
-		FieldSetter.se (controller.getClass(), "playview");
+//		FieldSetter.setField(controller, controller.getClass().getDeclaredField("myService"), playView);
 //		PowerMockito.whenNew(Person.class).withNoArguments().thenReturn(person);
-		Whitebox.setInternalState(controller.getClass(), "playView", playView);
+
+		this.controller = new PlayController(new Game(), this.state);
+//		Whitebox.setInternalState(controller.getClass(), "playView", playView);
+		Field f = this.controller.getClass().getDeclaredField("playView");
+		f.setAccessible(true);
+		f.set(controller, playView);
 	}
 	/*
 	@Test
@@ -61,7 +73,7 @@ public class PlayViewTest {
 	}*/
 	
 	@Test
-	public void putCorrectCoordinateValueTest() {
+	public void putCorrectCoordinateValueTest(){
 		System.out.println("putCorrectCoordinateValueTest");
 		this.state.reset();
 		this.state.next();
@@ -81,6 +93,10 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(4, 2)));
 
 		this.controller = new PlayController(this.game, this.state);
+//		Field f = this.controller.getClass().getDeclaredField("playView");
+//		f.setAccessible(true);
+//		f.set(controller, playView);
+		
 		this.controller.writeGame(controller);
 		this.controller.control();
 		
