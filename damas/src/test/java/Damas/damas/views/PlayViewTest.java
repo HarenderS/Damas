@@ -6,17 +6,10 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.lang.reflect.Field;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.internal.util.reflection.FieldSetter;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.mockito.MockitoAnnotations;
 
 import Damas.damas.controllers.PlayController;
 import Damas.damas.models.Coordinate;
@@ -28,28 +21,28 @@ import Damas.damas.utils.Console;
 
 public class PlayViewTest {
 
-	@Mock
 	private PlayView playView;
-	
-	@InjectMocks
 	private PlayController controller;
 	private State state; 
 	private Game game;
 	
 	@Before
 	public void test() throws Exception {
-		initMocks(this);
-		this.playView = mock(PlayView.class);
+		MockitoAnnotations.initMocks(this);
+		this.playView = new PlayView();
 		this.playView.console = mock(Console.class);
 		this.state = new State();
+		
+//		this.controller = new PlayController(new Game(), this.state);
+//		this.controller.setPlayView(playView);
+		
 //		FieldSetter.setField(controller, controller.getClass().getDeclaredField("myService"), playView);
 //		PowerMockito.whenNew(Person.class).withNoArguments().thenReturn(person);
 
-		this.controller = new PlayController(new Game(), this.state);
 //		Whitebox.setInternalState(controller.getClass(), "playView", playView);
-		Field f = this.controller.getClass().getDeclaredField("playView");
-		f.setAccessible(true);
-		f.set(controller, playView);
+//		Field f = this.controller.getClass().getDeclaredField("playView");
+//		f.setAccessible(true);
+//		f.set(controller, playView);
 	}
 	/*
 	@Test
@@ -93,9 +86,7 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(4, 2)));
 
 		this.controller = new PlayController(this.game, this.state);
-//		Field f = this.controller.getClass().getDeclaredField("playView");
-//		f.setAccessible(true);
-//		f.set(controller, playView);
+		this.controller.setPlayView(this.playView);
 		
 		this.controller.writeGame(controller);
 		this.controller.control();
@@ -123,6 +114,8 @@ public class PlayViewTest {
 		assertEquals("n", this.game.getPiece(from(4, 2)).getCode());
 		
 		this.controller = new PlayController(this.game, this.state);
+		this.controller.setPlayView(this.playView);
+		
 		this.controller.writeGame(controller);
 		this.controller.control();
 
@@ -149,6 +142,8 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(0, 2)));
 		
 		this.controller = new PlayController(this.game, this.state);
+		this.controller.setPlayView(this.playView);
+		
 		this.controller.writeGame(controller);
 		this.controller.control();
 		
@@ -175,6 +170,8 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(4, 4)));
 		
 		this.controller = new PlayController(this.game, this.state);
+		this.controller.setPlayView(this.playView);
+		
 		this.controller.writeGame(controller);
 		this.controller.control();
 		
@@ -202,6 +199,8 @@ public class PlayViewTest {
 		assertEquals("n", this.game.getPiece(from(2, 2)).getCode());
 		
 		this.controller = new PlayController(this.game, this.state);
+		this.controller.setPlayView(this.playView);
+		
 		this.controller.writeGame(controller);
 		this.controller.control();
 		
@@ -229,6 +228,8 @@ public class PlayViewTest {
 		assertEquals(StateValue.IN_GAME, this.state.getValueState());
 		
 		this.controller = new PlayController(this.game, this.state);
+		this.controller.setPlayView(this.playView);
+		
 		this.controller.writeGame(controller);
 		this.controller.control();
 		
@@ -239,16 +240,4 @@ public class PlayViewTest {
 		return new Coordinate(x, y);
 	}
 	
-//	public static void setInternalState(Object target, String field, Object value) {
-//	    Class<?> c = target.getClass();
-//	    try {
-//	        FieldSetter f = new FieldSetter(PlayController.class, "playview");
-//	        		getFieldFromHierarchy(c, field);  // Checks superclasses.
-//	        f.setAccessible(true);
-//	        f.set(target, value);
-//	    } catch (Exception e) {
-//	        throw new RuntimeException(
-//	            "Unable to set internal state on a private field. [...]", e);
-//	    }
-//	}
 }

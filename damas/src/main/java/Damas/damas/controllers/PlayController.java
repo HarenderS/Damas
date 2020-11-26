@@ -18,11 +18,11 @@ public class PlayController extends InteractorController {
 		super(game, state);
 		this.cancelController = new CancelController(game, state);
 		this.moveController = new MoveController(game, state);
+		this.playView = new PlayView(); 
 	}
 
 	@Override
 	public void control() {
-		this.playView = new PlayView(); 
 		readMovement();
 		
 	}
@@ -80,6 +80,10 @@ public class PlayController extends InteractorController {
 			coordinates[i] = Coordinate.getInstance(subCorrdenates[i]);
 		}
 		return coordinates;
+	}
+	
+	public void setPlayView(PlayView playView) {
+		this.playView = playView;
 	}
 
 }
