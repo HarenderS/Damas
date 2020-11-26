@@ -24,7 +24,7 @@ public class ErrorView extends SubView{
 		}
 		
 		public void writeln() {
-			if (error != null){
+			if (!error.isNull()){
 				this.console.writeln(ErrorView.ERRORMESSAGE[this.error.ordinal()]);
 			}
 		}

@@ -2,6 +2,7 @@ package Damas.damas.controllers;
 
 import Damas.damas.models.Game;
 import Damas.damas.models.State;
+import Damas.damas.views.ResumeView;
 
 public class ResumeController extends InteractorController {
 
@@ -9,19 +10,21 @@ public class ResumeController extends InteractorController {
         super(game, state);
 	}
 
-	public void next() {
-        this.state.next();
+	@Override
+	public void control() {
+		this.resume(new ResumeView().readResume());
 	}
 
-	public void reset() {
+	private void resume(Boolean reStart) {
+		if (reStart) {
+			this.reset();
+		} else {
+			next();
+		}
+	}
+	
+	private void reset() {
 		this.state.reset();
 		this.game.reset();
 	}
-
-    @Override
-	public void accept(InteractorControllersVisitor controllersVisitor) {
-		assert controllersVisitor != null;
-		controllersVisitor.visit(this);
-	}
-
 }

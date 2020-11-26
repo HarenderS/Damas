@@ -10,6 +10,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.internal.util.reflection.FieldSetter;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import Damas.damas.controllers.PlayController;
 import Damas.damas.models.Coordinate;
@@ -27,11 +30,14 @@ public class PlayViewTest {
 	private Game game;
 	
 	@Before
-	public void test() {
+	public void test() throws Exception {
 		initMocks(this);
-		this.playView = new PlayView();
+		this.playView = mock(PlayView.class);
 		this.playView.console = mock(Console.class);
 		this.state = new State();
+		FieldSetter.se (controller.getClass(), "playview");
+//		PowerMockito.whenNew(Person.class).withNoArguments().thenReturn(person);
+		Whitebox.setInternalState(controller.getClass(), "playView", playView);
 	}
 	/*
 	@Test
@@ -51,7 +57,7 @@ public class PlayViewTest {
 				"        ",
 				"        ").build();
 		this.controller = new PlayController(this.game, this.state);
-		this.playView.interact(controller);
+		this.controller.control();
 	}*/
 	
 	@Test
@@ -75,8 +81,8 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(4, 2)));
 
 		this.controller = new PlayController(this.game, this.state);
-		new GameView().write(controller);
-		this.playView.interact(controller);
+		this.controller.writeGame(controller);
+		this.controller.control();
 		
 		assertNotNull(this.game.getPiece(from(4, 2)));
 	}
@@ -101,8 +107,8 @@ public class PlayViewTest {
 		assertEquals("n", this.game.getPiece(from(4, 2)).getCode());
 		
 		this.controller = new PlayController(this.game, this.state);
-		new GameView().write(controller);
-		this.playView.interact(controller);
+		this.controller.writeGame(controller);
+		this.controller.control();
 
 		assertNull(this.game.getPiece(from(4, 4)));
 	}
@@ -127,8 +133,8 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(0, 2)));
 		
 		this.controller = new PlayController(this.game, this.state);
-		new GameView().write(controller);
-		this.playView.interact(controller);
+		this.controller.writeGame(controller);
+		this.controller.control();
 		
 		assertEquals("B", this.game.getPiece(from(0, 2)).getCode());
 	}
@@ -153,8 +159,8 @@ public class PlayViewTest {
 		assertNull(this.game.getPiece(from(4, 4)));
 		
 		this.controller = new PlayController(this.game, this.state);
-		new GameView().write(controller);
-		this.playView.interact(controller);
+		this.controller.writeGame(controller);
+		this.controller.control();
 		
 		assertNotNull(this.game.getPiece(from(4, 4)));
 	}
@@ -180,8 +186,8 @@ public class PlayViewTest {
 		assertEquals("n", this.game.getPiece(from(2, 2)).getCode());
 		
 		this.controller = new PlayController(this.game, this.state);
-		new GameView().write(controller);
-		this.playView.interact(controller);
+		this.controller.writeGame(controller);
+		this.controller.control();
 		
 		assertNotNull(this.game.getPiece(from(4, 4)));
 		assertNull(this.game.getPiece(from(2, 2)));
@@ -207,8 +213,8 @@ public class PlayViewTest {
 		assertEquals(StateValue.IN_GAME, this.state.getValueState());
 		
 		this.controller = new PlayController(this.game, this.state);
-		new GameView().write(controller);
-		this.playView.interact(controller);
+		this.controller.writeGame(controller);
+		this.controller.control();
 		
 		assertEquals(StateValue.FINAL, this.state.getValueState());
 	}
@@ -216,4 +222,17 @@ public class PlayViewTest {
 	private Coordinate from(int x, int y) {
 		return new Coordinate(x, y);
 	}
+	
+//	public static void setInternalState(Object target, String field, Object value) {
+//	    Class<?> c = target.getClass();
+//	    try {
+//	        FieldSetter f = new FieldSetter(PlayController.class, "playview");
+//	        		getFieldFromHierarchy(c, field);  // Checks superclasses.
+//	        f.setAccessible(true);
+//	        f.set(target, value);
+//	    } catch (Exception e) {
+//	        throw new RuntimeException(
+//	            "Unable to set internal state on a private field. [...]", e);
+//	    }
+//	}
 }

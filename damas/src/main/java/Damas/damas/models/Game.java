@@ -23,14 +23,17 @@ public class Game {
 			for (int j = 0; j < Coordinate.getDimension(); j++) {
 				Coordinate coordinate = new Coordinate(i, j);
 				Color color = Color.getInitialColor(coordinate);
-				if (color != null)
+				if (color != null) {
 					this.board.put(coordinate, new Pawn(color));
+				}else {
+					this.board.put(coordinate, null);
+				}
 			}
 		this.turn = new Turn();
 	}
 
 	public Error move(Coordinate... coordinates) {
-		Error error = null;
+		Error error = Error.NULL;
 		List<Coordinate> removedCoordinates = new ArrayList<Coordinate>();
 		int pair = 0;
 		do {
@@ -42,8 +45,8 @@ public class Game {
 					pair++;
 				}
 			}
-		} while (pair < coordinates.length - 1 && error == null);
-		if (error == null)
+		} while (pair < coordinates.length - 1 && error.isNull());
+		if (error.isNull())
 			this.turn.change();
 		return error;
 	}
@@ -89,9 +92,10 @@ public class Game {
 	private Error isCorrectGlobalMove(List<Coordinate> removedCoordinates, Coordinate... coordinates) {
 		if (coordinates.length > 2 && coordinates.length > removedCoordinates.size() + 1)
 			return Error.TOO_MUCH_JUMPS;
-		return null;
+		return Error.NULL;
 	}
-	
+
+	// with the refactor we don't you this method
 	private void unMovesUntilPair(List<Coordinate> removedCoordinates, int pair, Coordinate... coordinates) {
 		for (int j = pair; j > 0; j--)
 			this.board.move(coordinates[j], coordinates[j - 1]);
@@ -122,7 +126,7 @@ public class Game {
 	private boolean isBlocked(Coordinate coordinate) {
 		for (int i = 1; i <= 2; i++)
 			for (Coordinate target : coordinate.getDiagonalCoordinates(i))
-				if (this.isCorrectPairMove(0, coordinate, target) == null)
+				if (this.isCorrectPairMove(0, coordinate, target).isNull())
 					return false;
 		return true;
 	}

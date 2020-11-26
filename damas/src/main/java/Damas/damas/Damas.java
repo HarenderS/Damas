@@ -1,24 +1,39 @@
 package Damas.damas;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import Damas.damas.controllers.InteractorController;
-import Damas.damas.controllers.Logic;
-import Damas.damas.views.View;
+import Damas.damas.controllers.PlayController;
+import Damas.damas.controllers.ResumeController;
+import Damas.damas.controllers.StartController;
+import Damas.damas.models.Game;
+import Damas.damas.models.State;
+import Damas.damas.models.StateValue;
 
 public class Damas {
-	private View view;
-    private Logic logic;
-
+	
+	private Game game;
+	private State state;
+	private Map<StateValue, InteractorController> controllers;
+	
     private Damas(){
-        this.view = new View();
-        this.logic = new Logic();
+    	this.game = new Game();
+		this.state = new State();
+        this.controllers = new HashMap<StateValue, InteractorController>();
+		this.controllers.put(StateValue.INITIAL, new StartController(this.game, this.state));
+		this.controllers.put(StateValue.IN_GAME, new PlayController(this.game, this.state));
+		this.controllers.put(StateValue.FINAL, new ResumeController(this.game, this.state));
+		this.controllers.put(StateValue.EXIT, null);
     }
 
     private void play() {
         InteractorController controller;
 		do {
-			controller = this.logic.getController();
-			if (controller != null)
-				this.view.interact(controller);
+			controller = this.controllers.get(this.state.getValueState());
+			if (controller != null) {
+            	controller.control();
+            }
 		} while (controller != null); 
     }
 
